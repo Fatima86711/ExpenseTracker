@@ -14,11 +14,13 @@ function App() {
     <Navbar/>
     
     <Routes>
-      <Route path='/dashboard' element= {<AddTransaction/>} />
+      
+      <Route path='/' element= {<Dashboard/>} />
+      <Route path='/dashboard' element= {<Dashboard/>} />
       <Route path='/transaction' element= {<Transaction/>} />
       <Route path='/report' element= {<Report/>} />
       <Route path='*' element= {<NotFound/>} />
-      {/* <Route path='/dashboard' element= {<Dashboard/>} > */}
+      <Route path='/add-transaction' element= {<AddTransaction/>} />
 
       
     </Routes>

@@ -1,11 +1,15 @@
-import {React, useState} from 'react'
+import {React, useState, useEffect} from 'react'
 import "../Styles/AddTransaction.css"
+import { useLocation } from 'react-router-dom';
 const AddTransaction = () => {
     const [type, setType] = useState('Expense');
     const [description, setDescription] = useState("");
     const [amount, setAmount] = useState('');
     const [date, setDate] = useState('');
     const [category,setCategory] = useState('');
+    const [transaction, setTransaction] = useState([]);
+    const [editIndex, setEditIndex] = useState(null);
+    const location = useLocation();
 function submitForm(e){
     console.log(amount, type,description,date, category)
     if(!amount || !category || !date){
@@ -18,29 +22,29 @@ const dataObject = {
     amount:parseInt(amount),
     category
 }
+
 //get the previous data
+const newTransactions = [...transaction,dataObject]
+// let parsedPrevData=[];
+// var prevData =[];
+const stringify_transactions = JSON.stringify(newTransactions);
+localStorage.setItem("TransactionData",stringify_transactions);
+//  prevData = transaction;
 
-let parsedPrevData=[];
-var prevData =[];
-
- prevData = localStorage.getItem("transactionData");
-
-if(prevData){
-    try{
-    parsedPrevData = JSON.parse(prevData);
-}catch(err){
-    console.log(err);
-prevData = [];
-}
-}
-
+// if(prevData){
+//     try{
+//     parsedPrevData = JSON.parse(prevData);
+// }catch(err){
+//     console.log(err);
+// prevData = [];
+// }
+// }
+alert("Transaction Added successfully")
 //pushed the new object into the array
-parsedPrevData.push(dataObject);
+// parsedPrevData.push(dataObject);
 //again convert back to stringify
-var transactionData = JSON.stringify(parsedPrevData);
 
-localStorage.setItem("transactionData",transactionData);
-console.log(localStorage.getItem("transactionData"));
+// console.log(localStorage.getItem("transactionData"));
 setAmount('');
 setCategory('')
 setDate('');
@@ -49,6 +53,21 @@ setType('Expense');
 
 
 }
+useEffect(()=>{
+  const existingTransaction= JSON.parse(localStorage.getItem("transactionData")) ||[];
+  setTransaction(existingTransaction);
+console.log("location is : ",location.state);
+if(location.state && location.state.transaction){
+  const data = location.state.transaction;
+  setType(data.type);
+  setCategory(data.category);
+  setAmount(data.amount);
+  setDate(data.date);
+  setDescription(data.description);
+  setEditIndex(transaction.index)
+  
+}
+},[location]);
   return (
    <div className="add-transaction-container">
       <h2>Add Transaction</h2>
